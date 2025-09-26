@@ -5,20 +5,19 @@ import type { Issue } from "@/types/issue"
 
 interface DirectusIssue {
   id: string
-  translations: Array<{
+  vignette?: string
+  title: string
+  introduction?: string
+  video_url?: string
+  video_description?: string
+  content?: string
+  solutions?: Array<{
     title?: string
-    description?: string
-    content?: string
     video_url?: string
-    solutions?: Array<{
-      title?: string
-      video_url?: string
-    }>
-    testimonies?: Array<{
-      title?: string
-      video_url?: string
-    }>
-    resources_description?: string
+  }>
+  testimonies?: Array<{
+    title?: string
+    video_url?: string
   }>
   appendix: Array<{
     directus_files_id: {
@@ -30,6 +29,7 @@ interface DirectusIssue {
     title?: string
     url?: string
   }>
+  pdf_text?: string
 }
 
 interface VideoItem {
@@ -40,13 +40,12 @@ interface VideoItem {
 export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, 'id') || '1'
   const query = getQuery(event)
-  const lang = (query.lang as string) || 'fr-FR'
+  const lang = (query.lang as string) || 'fr'
 
   try {
     const res = await useDirectus().request(
-      readItem("pte_issues", id, {
-        fields: ["*", "translations.*", "appendix.directus_files_id.*"],
-        deep: { translations: { _filter: { languages_code: { _eq: lang } } } }
+      readItem("issues", id, {
+        fields: ["*", "appendix.directus_files_id.*"]
       })
     ) as DirectusIssue
 
@@ -71,17 +70,16 @@ const transformVideoItems = (items?: Array<{ title?: string, video_url?: string 
  * Transform API response into Issue object
  */
 const transform = (response: DirectusIssue): Issue => {
-  const translation = response.translations[0] || {}
   
   return {
     id: Number(response.id),
-    title: translation.title || "",
-    description: translation.description || "",
-    content: translation.content || "",
-    url: transformYoutubeUrl(translation.video_url),
-    solutions: transformVideoItems(translation.solutions),
-    testimonies: transformVideoItems(translation.testimonies),
-    resourcesDescription: translation.resources_description || "",
+    title: response.title || "",
+    introduction: response.introduction || "",
+    videoDescription: response.video_description || "",
+    videoUrl: transformYoutubeUrl(response.video_url),
+    content: response.content || "",
+    solutions: transformVideoItems(response.solutions),
+    testimonies: transformVideoItems(response.testimonies),
     appendix: (response.appendix || []).map((appendix) => ({
       title: appendix?.directus_files_id?.title || "",
       url: directusAssetUrl(appendix?.directus_files_id?.id || "")

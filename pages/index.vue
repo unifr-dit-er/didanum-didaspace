@@ -7,7 +7,7 @@ const { locale } = useI18n()
 const search = useSearch()
 
 const { data: issues, error } = await useFetch<Issue[]>(`/api/${apiProvider}/issues`, {
-  query: { lang: `${locale.value}-${locale.value.toUpperCase()}`, search }
+  query: { lang: `${locale.value}`, search }
 })
 </script>
 
@@ -23,7 +23,7 @@ const { data: issues, error } = await useFetch<Issue[]>(`/api/${apiProvider}/iss
       </div>
       <VCard v-for="issue in issues" :key="issue.id" 
         :title="issue.title" 
-        :description="issue.description || ''"
+        :description="issue.videoDescription || issue.introduction || ''"
         :vignette="issue.vignette"
         :link="localePath(`/issues/${issue.id}`)"
       />

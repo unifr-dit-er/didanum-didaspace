@@ -4,36 +4,38 @@ import type { Issue } from "@/types/issue"
 interface QueryOptions {
   limit: number;
   fields: string[];
-  deep: { translations: { _filter: { languages_code: { _eq: string } } } };
+  //deep: { translations: { _filter: { languages_code: { _eq: string } } } };
   sort: string[];
   filter?: any;
 }
 
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
-  const lang = query.lang as string || 'fr-FR'
+  const lang = query.lang as string || 'fr'
   const search = query.search as string || ''
 
   const queryOptions: QueryOptions = {
     limit: -1,
-    fields: ["*", "translations.title", "translations.description", "translations.content"],
-    deep: { translations: { _filter: { languages_code: { _eq: lang } } } },
+    fields: ["*"],
+    //deep: { translations: { _filter: { languages_code: { _eq: lang } } } },
+    filter: { language: { _eq: lang } },
     sort: ["sort"]
   }
 
   if (search.trim() !== '') {
     queryOptions.filter = {
       _or: [
-        { translations: { title: { _contains: search } } },
-        { translations: { description: { _contains: search } } },
-        { translations: { content: { _contains: search } } },
+        { title: { _contains: search } },
+        { introduction: { _contains: search } },
+        { video_description: { _contains: search } },
+        { content: { _contains: search } },
         { pdf_text: { _contains: search } }
       ]
     }
   }
 
   const res = await useDirectus().request(
-    readItems("pte_issues", queryOptions)
+    readItems("issues", queryOptions)
   )
 
   let issues = res.map(e => transform(e))
@@ -44,8 +46,9 @@ export default defineEventHandler(async (event) => {
 const transform = (response: any): Issue => {
   return {
     id: response.id,
-    title: response.translations[0]?.title || "",
-    vignette: response.vignette ? `https://eddb.unifr.ch/didanum-admin/assets/${response.vignette}?fit=cover&width=490&height=300` : "",
-    description: response.translations[0]?.description || ""
+    title: response.title || "",
+    vignette: response.vignette ? `https://eddb.unifr.ch/didanum9-admin/assets/${response.vignette}?fit=cover&width=490&height=300` : "",
+    videoDescription: response.video_description || "",
+    introduction: response.introduction || "",
   }
 }

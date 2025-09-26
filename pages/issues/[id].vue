@@ -4,7 +4,7 @@ import type { Issue } from "@/types/issue"
 const { id } = useRoute().params
 const apiProvider = useRuntimeConfig().public.apiProvider
 const { locale } = useI18n()
-const lang = `${locale.value}-${locale.value.toUpperCase()}`
+const lang = `${locale.value}`
 const localePath = useLocalePath()
 
 const { data: issue, error, pending } = await useFetch<Issue>(`/api/${apiProvider}/issues/${id}`, {
@@ -24,10 +24,10 @@ if (issue.value == null || issue.value.title == "") {
           {{ issue.title }}
         </h1>
         <div class="text-xl">
-          <div v-html="issue.resourcesDescription"></div>
+          <div v-html="issue.introduction"></div>
         </div>
         <div class="my-6">
-          <VCardVideo v-if="issue.url" :url="issue.url" :description="issue.description" />
+          <VCardVideo v-if="issue.videoUrl" :url="issue.videoUrl" :description="issue.videoDescription" />
         </div>
         <div class="grid md:grid-cols-2 gap-4">
           <VCardVideo v-for="solution in issue.solutions" :url="solution.url" :title="solution.title" />

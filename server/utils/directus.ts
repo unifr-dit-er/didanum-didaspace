@@ -12,7 +12,7 @@ let _directus : DirectusClient<any> & RestClient<any>
 
 export const useDirectus = () => {
   if (!_directus) {
-    _directus = createDirectus('https://eddb.unifr.ch/didanum-admin').with(rest())
+    _directus = createDirectus('https://eddb.unifr.ch/didanum9-admin').with(rest())
   }
   return _directus
 }
@@ -23,5 +23,5 @@ export const dTranslate = (translations: Translation[], key: string, lang: strin
 }
 
 export const directusAssetUrl = (id: string): string => {
-  return `https://eddb.unifr.ch/didanum-admin/assets/${id}`
+  return `https://eddb.unifr.ch/didanum9-admin/assets/${id}`
 }
