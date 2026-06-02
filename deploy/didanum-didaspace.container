@@ -1,0 +1,14 @@
+[Unit]
+Description=Didanum Didaspace Container
+
+[Container]
+Label=app=didanum-didaspace
+ContainerName=didanum-didaspace
+Image=localhost/didanum-didaspace:latest
+PublishPort=127.0.0.1:8099:3000
+
+[Service]
+ExecStartPre=/usr/bin/podman rm -f didanum-didaspace
+
+[Install]
+WantedBy=default.target
