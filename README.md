@@ -1,75 +1,63 @@
-# Nuxt Minimal Starter
+# Didanum Didaspace
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+## Overview
 
-## Setup
+Didanum Didaspace is a web application built with Nuxt 3.
 
-Make sure to install dependencies:
+It lets you:
+- browse educational resources from a Directus API;
+- navigate content in French and German (i18n);
+- display rich content with Tailwind CSS + DaisyUI.
+
+Main configuration is handled in `nuxt.config.ts`.
+
+## Development
+
+### Prerequisites
+
+- Node.js 22 (recommended)
+- npm
+
+### Setup
 
 ```bash
-# npm
 npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
-```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
 npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
 ```
 
-## Production
+App: `http://localhost:3000`
 
-Build the application for production:
+### Update
 
 ```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
+git pull
+npm install
 ```
 
-Locally preview production build:
+## Production deployment with Podman
+
+The image builds the app at build time and serves it via the Nuxt server on port 3000.
+
+### Build the image
 
 ```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
+podman build -t didanum-didaspace .
 ```
 
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+### Run as a systemd service (Quadlet)
+
+A Quadlet unit file is provided in [deploy/didanum-didaspace.container](deploy/didanum-didaspace.container). It exposes the app on `127.0.0.1:8099`.
+
+```bash
+cp deploy/didanum-didaspace.container ~/.config/containers/systemd/
+systemctl --user daemon-reload
+systemctl --user start didanum-didaspace
+```
+
+### Update
+
+```bash
+git pull
+podman build -t didanum-didaspace .
+systemctl --user restart didanum-didaspace
+```
