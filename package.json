@@ -12,7 +12,7 @@
   "dependencies": {
     "@directus/sdk": "^18.0.0",
     "@nuxtjs/i18n": "^9.0.0",
-    "nuxt": "^3.14",
+    "nuxt": "^3.21",
     "vue": "latest",
     "vue-router": "latest"
   },
