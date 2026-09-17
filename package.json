@@ -13,8 +13,8 @@
     "@directus/sdk": "^18.0.0",
     "@nuxtjs/i18n": "^9.0.0",
     "nuxt": "^3.21",
-    "vue": "latest",
-    "vue-router": "latest"
+    "vue": "^3.5.42",
+    "vue-router": "^4.6.4"
   },
   "devDependencies": {
     "@iconify-json/tabler": "^1.2.8",
