@@ -8,7 +8,8 @@ Image=localhost/didanum-didaspace:latest
 PublishPort=127.0.0.1:8099:3000
 
 [Service]
-ExecStartPre=/usr/bin/podman rm -f didanum-didaspace
+Restart=on-failure
+RestartSec=10s
 
 [Install]
 WantedBy=default.target
